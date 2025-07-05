@@ -11,7 +11,6 @@ function convertTreeToD3Format(node) {
 }
 
 
-
 function drawD3Tree(treeData) {
   document.getElementById("tree-svg").innerHTML = ""; // clear previous
 
@@ -23,9 +22,10 @@ function drawD3Tree(treeData) {
 
   const formattedTree = convertTreeToD3Format(treeData);
   const root = d3.hierarchy(formattedTree);
+  //const treeLayout = d3.tree().size([width - 100, height - 100]);
+  const treeLayout = d3.tree().size([1200, 400]);  // wider spacing
 
-
-  const treeLayout = d3.tree().size([width - 100, height - 100]);
+  // const treeLayout = d3.tree().size([width - 100, height - 100]);
   treeLayout(root);
 
   // Draw links
@@ -39,27 +39,49 @@ function drawD3Tree(treeData) {
     .attr("y2", d => d.target.y)
     .attr("stroke", "#999");
 
-  // Draw nodes
+  // ✅ FIX: Add this block back to define "node"
   const node = g.selectAll(".node")
     .data(root.descendants())
     .enter().append("g")
     .attr("class", "node")
     .attr("transform", d => `translate(${d.x},${d.y})`);
 
+  // Draw circles
   node.append("circle")
-    .attr("r", 25)
-    .attr("fill", d => d.data.is_leaf ? "#90ee90" : "#add8e6")
-    .attr("stroke", "#333");
+  .attr("r", 48)
+  .attr("fill", d => d.data.is_leaf ? "#ffffff" : "#000000")  // white for leaf, black for decision
+  .attr("stroke", "#333");
 
-  node.append("text")
-    .attr("dy", 4)
-    .attr("text-anchor", "middle")
-    .attr("font-size", 10)
-    .text(d => d.data.is_leaf
-      ? `Leaf\n${d.data.value.toFixed(2)}`
-      : `F${d.data.feature} ≤ ${d.data.threshold.toFixed(1)}`);
+// Text styling
+node.append("text")
+  .attr("text-anchor", "middle")
+  .attr("font-size", 14)
+  .attr("font-weight", "bold")
+  .attr("y", function(d) {
+    const lines = d.data.is_leaf ? 3 : 2;
+    return -((lines - 1) * 10); // Adjust vertical shift based on number of lines
+  })
+  .selectAll("tspan")
+  .data(d => {
+    const isLeaf = d.data.is_leaf;
+    const textColor = isLeaf ? "#000000" : "#ffffff";
+    const lines = isLeaf
+      ? [`Leaf`, `Value: ${d.data.value.toFixed(2)}`, `MSE: ${d.data.mse.toFixed(2)}`]
+      : [`F${d.data.feature} ≤ ${d.data.threshold.toFixed(2)}`, `MSE: ${d.data.mse.toFixed(2)}`];
+    return lines.map((line, i) => ({ line, textColor, i }));
+  })
+  .enter()
+  .append("tspan")
+  .attr("x", 0)
+  .attr("dy", "1.2em")
+  .attr("fill", d => d.textColor)
+  .text(d => d.line);
+
+
+
+
+
 }
-
 
 
 

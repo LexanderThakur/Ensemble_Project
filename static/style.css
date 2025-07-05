@@ -145,3 +145,13 @@ button:hover {
   flex: 1;
   margin: 0 5px;
 }
+
+#tree-container {
+  width: 100%;
+  overflow-x: auto;  /* Allow horizontal scroll */
+  padding: 10px;
+}
+
+#tree-svg {
+  display: block;
+}
