@@ -121,15 +121,6 @@ button:hover {
 }
 
 
-.tree-node {
-  border: 1px solid #333;
-  padding: 10px;
-  margin: 10px;
-  display: inline-block;
-  background: #f9f9f9;
-  border-radius: 8px;
-  text-align: center;
-}
 
 .leaf {
   background-color: #e6ffe6;
@@ -146,12 +137,45 @@ button:hover {
   margin: 0 5px;
 }
 
-#tree-container {
-  width: 100%;
-  overflow-x: auto;  /* Allow horizontal scroll */
-  padding: 10px;
-}
+
 
 #tree-svg {
   display: block;
+}
+#tree-container {
+  position: relative;
+  width: 1200px;
+  height: 800px;
+  margin: 20px auto;
+  border: 1px solid #ccc;
+  background-color: white;
+  overflow: auto;
+}
+
+.tree-node {
+  position: absolute;
+  width: 110px;
+  height: 70px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+
+
+.tree-label {
+  position: absolute;
+  background-color: rgba(255,255,255,0.9);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  pointer-events: none;
 }

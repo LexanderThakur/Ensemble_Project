@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Interactive Tree Visualizer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="{{ url_for('static', filename='script.js') }}"> </script>
+    <script src="{{ url_for('static', filename='script1.js') }}"> </script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
 
   </head>
@@ -34,11 +34,13 @@
 
         <label class="slider-label">
           <span>Max Depth: <span id="depth-value">3</span></span>
-          <input  type="range" name="max_depth" min="1" max="10" value="3" id="depth-slider">
+          <input  type="range" name="max_depth" min="1" max="5" value="3" id="depth-slider">
         </label>
       </div>
       <button type="submit" onclick="RegGen(event)">Generate Tree</button>
     </form>
+
+    <div id="tree-container"></div>
   </section>
 
       <section id="bagging-section" class="content-section">
@@ -61,9 +63,8 @@
 
       <!-- 🟩 Shared output area for all models -->
       <div id="shared-output" class="output-box"></div>
-      <div id="tree-container">
-        <svg id="tree-svg" width="2000" height="500"></svg>
-      </div>
+      
+
 
     </main>
 
