@@ -1,0 +1,121 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+  color: #000;
+}
+
+.navbar {
+  padding: 20px 0;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: transparent;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  cursor: pointer;
+  font-size: 16px;
+  color: black;
+  transition: transform 0.2s ease;
+}
+
+.nav-item:hover {
+  transform: scale(1.1);
+}
+
+.nav-item.active {
+  font-weight: bold;
+  border-bottom: 2px solid black;
+}
+
+/* Sections */
+.content-section {
+  display: none;
+  padding: 40px;
+  text-align: center;
+}
+
+.active-section {
+  display: block;
+}
+
+/* Slider layout */
+.slider-group {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  margin-bottom: 20px;
+}
+
+.slider-group label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 14px;
+}
+
+/* Slider appearance */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 200px;
+  height: 4px;
+  background: #000;
+  outline: none;
+  border-radius: 2px;
+  margin-top: 10px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 12px;
+  width: 12px;
+  background: #000;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 12px;
+  width: 12px;
+  background: #000;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+button {
+  padding: 8px 20px;
+  border: 1px solid #000;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+button:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+/* Output box placed below all forms */
+.output-box {
+  margin-top: 30px;
+  padding: 20px;
+  border-top: 1px solid #ddd;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  font-size: 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}

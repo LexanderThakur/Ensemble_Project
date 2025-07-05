@@ -1,0 +1,91 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Interactive Tree Visualizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"> </script>
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul class="nav-list">
+        <li class="nav-item active" data-target="title-section">Title Page</li>
+        <li class="nav-item" data-target="regression-section">Regression Tree</li>
+        <li class="nav-item" data-target="bagging-section">Bagging</li>
+        <li class="nav-item" data-target="randomforest-section">Random Forests</li>
+        <li class="nav-item" data-target="boosting-section">Boosting</li>
+      </ul>
+    </nav>
+
+    <main id="content">
+      <section id="title-section" class="content-section active-section">
+        <p>Welcome! Build and visualize tree-based ML models interactively.</p>
+      </section>
+
+      <section id="regression-section" class="content-section">
+    <form id="regression-form">
+      <div class="slider-group compact">
+        <label class="slider-label">
+          <span>Samples: <span id="sample-count">50</span></span>
+          <input id="Reg_samples" type="range" name="samples" min="10" max="100" value="50" id="samples-slider">
+        </label>
+
+        <label class="slider-label">
+          <span>Max Depth: <span id="depth-value">3</span></span>
+          <input id="Reg_max_depth" type="range" name="max_depth" min="1" max="10" value="3" id="depth-slider">
+        </label>
+      </div>
+      <button type="submit" onclick="RegGen(event)">Generate Tree</button>
+    </form>
+  </section>
+
+      <section id="bagging-section" class="content-section">
+        <form id="bagging-form">
+          <!-- Add bagging sliders or inputs here -->
+        </form>
+      </section>
+
+      <section id="randomforest-section" class="content-section">
+        <form id="rf-form">
+          <!-- Random Forest form goes here -->
+        </form>
+      </section>
+
+      <section id="boosting-section" class="content-section">
+        <form id="boosting-form">
+          <!-- Boosting form goes here -->
+        </form>
+      </section>
+
+      <!-- 🟩 Shared output area for all models -->
+      <div id="shared-output" class="output-box"></div>
+    </main>
+
+    <script>
+      const navItems = document.querySelectorAll(".nav-item");
+      const sections = document.querySelectorAll(".content-section");
+
+      navItems.forEach(item => {
+        item.addEventListener("click", () => {
+          navItems.forEach(i => i.classList.remove("active"));
+          sections.forEach(s => s.classList.remove("active-section"));
+          item.classList.add("active");
+          const target = document.getElementById(item.dataset.target);
+          target.classList.add("active-section");
+
+          // Optional: clear output when switching tabs
+          document.getElementById("shared-output").innerHTML = "";
+        });
+      });
+
+      // Live slider updates
+      const samplesSlider = document.getElementById("samples-slider");
+      const sampleCount = document.getElementById("sample-count");
+      samplesSlider.oninput = () => sampleCount.textContent = samplesSlider.value;
+
+      const depthSlider = document.getElementById("depth-slider");
+      const depthValue = document.getElementById("depth-value");
+      depthSlider.oninput = () => depthValue.textContent = depthSlider.value;
+    </script>
+  </body>
+  </html>
