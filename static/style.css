@@ -119,3 +119,29 @@ button:hover {
   white-space: pre-wrap;
   word-break: break-word;
 }
+
+
+.tree-node {
+  border: 1px solid #333;
+  padding: 10px;
+  margin: 10px;
+  display: inline-block;
+  background: #f9f9f9;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.leaf {
+  background-color: #e6ffe6;
+}
+
+.node-children {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.child {
+  flex: 1;
+  margin: 0 5px;
+}
