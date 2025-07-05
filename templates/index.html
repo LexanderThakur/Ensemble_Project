@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <title>Interactive Tree Visualizer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="{{ url_for('static', filename='script1.js') }}"> </script>
+    
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
 
   </head>
   <body>
@@ -40,7 +42,10 @@
       <button type="submit" onclick="RegGen(event)">Generate Tree</button>
     </form>
 
-    <div id="tree-container"></div>
+    <div id="tree-container">
+  <svg id="tree-lines" width="100%" height="100%" style="position: absolute; top: 0; left: 0; z-index: 0;"></svg>
+    </div>
+
   </section>
 
       <section id="bagging-section" class="content-section">
@@ -94,5 +99,7 @@
       const depthValue = document.getElementById("depth-value");
       depthSlider.oninput = () => depthValue.textContent = depthSlider.value;
     </script>
+    <script src="{{ url_for('static', filename='script1.js') }}"></script>
+
   </body>
   </html>
