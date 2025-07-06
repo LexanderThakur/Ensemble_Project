@@ -14,9 +14,11 @@ def layout_tree(tree, x=0, y=0, dx=1.5, dy=-100, nodes=None, edges=None, parent=
     if nodes is None: nodes = []
     if edges is None: edges = []
     label = (
-    f"MSE: {tree['mse']:.2f}<br>Value: {tree['value']:.2f}" if tree["is_leaf"]
-    else f"MSE: {tree['mse']:.2f}<br>X[{tree['feature']}] ≤ {tree['threshold']:.2f}"
+    f"MSE: {tree['mse']:.2f}<br>Value: {tree['value']:.2f}<br>Samples: {tree['samples']}"
+    if tree["is_leaf"]
+    else f"MSE: {tree['mse']:.2f}<br>Feature X[{tree['feature']}] ≤ {tree['threshold']:.2f}<br>Samples: {tree['samples']}"
 )
+
 
 
     # label = f"MSE: {tree['mse']:.2f}" if tree["is_leaf"] else f"X[{tree['feature']}] ≤ {tree['threshold']:.2f}"

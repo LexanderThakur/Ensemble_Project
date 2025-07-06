@@ -50,7 +50,8 @@ def build_tree(X,y,depth=0,max_depth=3,min_samples=2):
       "is_leaf":True,
       "value":float(np.mean(y)),
       "depth":depth,
-      "mse":float(mse(y))
+      "mse":float(mse(y)),
+      "samples": len(y)
     }
 
   feature,threshold = best_split(X,y)
@@ -59,7 +60,8 @@ def build_tree(X,y,depth=0,max_depth=3,min_samples=2):
       "is_leaf": True,
       "value": float(np.mean(y)),
       "depth": depth,
-      "mse":float(mse(y))
+      "mse":float(mse(y)),
+      "samples": len(y)
     }
 
 
@@ -80,7 +82,8 @@ def build_tree(X,y,depth=0,max_depth=3,min_samples=2):
     "depth":depth,
     "left":left,
     "right": right,
-    "mse":float(mse(y))
+    "mse":float(mse(y)),
+    "samples": len(y)
   }
 
 

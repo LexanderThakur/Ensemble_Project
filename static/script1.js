@@ -1,5 +1,23 @@
 const apiBase = "/";
 
+function setLoadingState(isLoading) {
+  const buttons = document.querySelectorAll("button[type='submit']");
+  buttons.forEach(button => {
+    if (isLoading) {
+      button.disabled = true;
+      button.dataset.originalText = button.textContent;
+      button.textContent = "Loading...";
+    } else {
+      button.disabled = false;
+      if (button.dataset.originalText) {
+        button.textContent = button.dataset.originalText;
+        delete button.dataset.originalText;
+      }
+    }
+  });
+}
+
+
 function generateTable(X, y) {
   let html = "<table><thead><tr><th>Index</th><th>X[0]</th><th>X[1]</th><th>y</th></tr></thead><tbody>";
 
@@ -27,7 +45,7 @@ async function RegGen(event) {
 
   const n_samples = document.getElementById("samples-slider").value;
   const max_depth = document.getElementById("depth-slider").value;
-
+  setLoadingState(true);
   try {
     const response = await fetch(apiBase + "RegTree", {
       method: "POST",
@@ -47,6 +65,9 @@ async function RegGen(event) {
   } catch (err) {
     console.log("Error fetching data:", err.message);
   }
+  finally{
+    setLoadingState(false);
+  }
 }
 
 
@@ -57,7 +78,7 @@ async function BagGen(event) {
   const n_samples = document.getElementById("bag-samples-slider").value;
   const max_depth = document.getElementById("bag-depth-slider").value;
   const n_trees = document.getElementById("bag-tree-slider").value;
-
+  setLoadingState(true);
   try {
     const response = await fetch("/BagTree", {
       method: "POST",
@@ -75,10 +96,15 @@ async function BagGen(event) {
   } catch (err) {
     console.log("Error:", err.message);
   }
+  finally{
+    setLoadingState(false);
+  }
 }
 
 let boostingTrees = [];
 let boostingIndex = 0;
+
+
 
 async function BoostGen(event) {
   event.preventDefault();
@@ -87,7 +113,7 @@ async function BoostGen(event) {
   const max_depth = document.getElementById("boost-depth-slider").value;
   const n_trees = document.getElementById("boost-tree-slider").value;
   const lr = document.getElementById("boost-lr-slider").value;
-
+  setLoadingState(true);
   try {
     const response = await fetch("/BoostTree", {
       method: "POST",
@@ -103,10 +129,18 @@ async function BoostGen(event) {
     const data = await response.json();
     boostingTrees = data.trees;
     boostingIndex = 0;
-    showNextBoostingTree();  // Show first tree
+
+    document.getElementById("next-boost-tree").style.display = "inline-block";
+    document.getElementById("next-boost-tree").disabled = false;
+    document.getElementById("next-boost-tree").textContent = "Next Tree →";
+
+    showNextBoostingTree();  // show the first tree
 
   } catch (err) {
     console.error("Boosting error:", err);
+  }
+  finally{
+    setLoadingState(false);
   }
 }
 
@@ -116,11 +150,14 @@ function showNextBoostingTree() {
   const currentTree = boostingTrees[boostingIndex];
   Plotly.newPlot("boosting-tree-container", currentTree.data, currentTree.layout);
 
-  // Update tree number text
-  const numberDiv = document.getElementById("boost-tree-number");
-  numberDiv.textContent = `Tree ${boostingIndex + 1} of ${boostingTrees.length}`;
+  document.getElementById("boost-tree-number").textContent =
+    `Tree ${boostingIndex + 1} of ${boostingTrees.length}`;
 
-  // Move to next
-  boostingIndex = (boostingIndex + 1) % boostingTrees.length;  // Loop around
+  boostingIndex++;
+
+  if (boostingIndex >= boostingTrees.length) {
+    document.getElementById("next-boost-tree").disabled = true;
+    document.getElementById("next-boost-tree").textContent = "Completed";
+  }
 }
 

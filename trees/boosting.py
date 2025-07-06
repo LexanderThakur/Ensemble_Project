@@ -49,7 +49,8 @@ def build_tree_b(X, y, depth=0, maxdepth=3, min_samples=2, n_features_to_conside
       "is_leaf": True,
       "value": float(np.mean(y)),
       "depth": depth,
-      "mse":float(mse(y))
+      "mse":float(mse(y)),
+      "samples": len(y)
     }
 
     n_total_features = X.shape[1]
@@ -65,7 +66,8 @@ def build_tree_b(X, y, depth=0, maxdepth=3, min_samples=2, n_features_to_conside
       "is_leaf": True,
       "value": float(np.mean(y)),
       "depth": depth,
-      "mse":float(mse(y))
+      "mse":float(mse(y)),
+      "samples": len(y)
     }
 
     left_mask = X[:, feature] <= threshold
@@ -81,7 +83,8 @@ def build_tree_b(X, y, depth=0, maxdepth=3, min_samples=2, n_features_to_conside
     "depth":depth,
     "left":left,
     "right": right,
-    "mse":float(mse(y))
+    "mse":float(mse(y)),
+    "samples": len(y)
   }
 
 def predict_sample(tree, x):

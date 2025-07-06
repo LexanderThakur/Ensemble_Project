@@ -103,14 +103,21 @@
 
       </label>
     </div>
-    <button type="button" onclick="BoostGen(event)">Generate Boosting Model</button>
+    <div class="button-row">
+  <button type="submit" onclick="BoostGen(event)">Generate Boosting Model</button>
+
+  <button type="button" id="next-boost-tree" onclick="showNextBoostingTree()" style="display:none;">
+    Next Tree →
+  </button>
+</div>
+
 
   </form>
   <div id="boost-tree-number" style="margin: 10px 0; font-weight: bold;"></div>
 
   <div id="boosting-tree-container" style="margin-top: 20px;"></div>
   <div style="margin-top: 10px; text-align: right;">
-  <button id="boosting-next-btn" onclick="showNextBoostingTree()">Next ▶</button>
+
 </div>
   <div id="boost-observation">
     <strong>Observation:</strong><br>
