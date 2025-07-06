@@ -76,3 +76,51 @@ async function BagGen(event) {
     console.log("Error:", err.message);
   }
 }
+
+let boostingTrees = [];
+let boostingIndex = 0;
+
+async function BoostGen(event) {
+  event.preventDefault();
+
+  const n_samples = document.getElementById("boost-samples-slider").value;
+  const max_depth = document.getElementById("boost-depth-slider").value;
+  const n_trees = document.getElementById("boost-tree-slider").value;
+  const lr = document.getElementById("boost-lr-slider").value;
+
+  try {
+    const response = await fetch("/BoostTree", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        n_samples: n_samples,
+        max_depth: max_depth,
+        n_trees: n_trees,
+        lr: lr
+      })
+    });
+
+    const data = await response.json();
+    boostingTrees = data.trees;
+    boostingIndex = 0;
+    showNextBoostingTree();  // Show first tree
+
+  } catch (err) {
+    console.error("Boosting error:", err);
+  }
+}
+
+function showNextBoostingTree() {
+  if (boostingTrees.length === 0) return;
+
+  const currentTree = boostingTrees[boostingIndex];
+  Plotly.newPlot("boosting-tree-container", currentTree.data, currentTree.layout);
+
+  // Update tree number text
+  const numberDiv = document.getElementById("boost-tree-number");
+  numberDiv.textContent = `Tree ${boostingIndex + 1} of ${boostingTrees.length}`;
+
+  // Move to next
+  boostingIndex = (boostingIndex + 1) % boostingTrees.length;  // Loop around
+}
+

@@ -2,7 +2,7 @@ from flask import Flask,request,jsonify,render_template
 
 from trees.RegressionTree import build_tree
 from trees.RegressionTree import BaggingRegressor
-
+from trees.boosting import GradientBoostingRegressor
 import json
 import numpy as np
 import plotly.io as pio
@@ -182,6 +182,30 @@ def bag_generate():
     fig = build_bagging_plotly_trees(model.trees)
     fig_json = json.loads(pio.to_json(fig))
     return jsonify(fig_json)
+
+@app.route('/BoostTree',methods=["POST"])
+def boost_generate():
+    data=request.get_json()
+
+    n_samples=int(data.get('n_samples',10))
+
+    max_depth=int(data.get('max_depth',3))
+    n_trees=int(data.get('n_trees',3))
+    lr=float(data.get('lr',0.1))
+
+
+
+    X,y=generate_linear_data(n_samples)
+
+    model = GradientBoostingRegressor(n_estimators=n_trees, learning_rate=lr, max_depth=max_depth)
+    model.fit(X, y)
+
+    figs = []
+    for tree in model.trees:
+        fig = build_plotly_tree(tree)
+        figs.append(json.loads(pio.to_json(fig)))
+
+    return jsonify({"trees": figs})
 
 
     
