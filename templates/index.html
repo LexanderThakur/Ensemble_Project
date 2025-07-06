@@ -26,7 +26,7 @@
         <p>Welcome! Build and visualize tree-based ML models interactively.</p>
       </section>
 
-      <section id="regression-section" class="content-section">
+  <section id="regression-section" class="content-section">
     <form id="regression-form">
       <div class="slider-group compact">
         <label class="slider-label">
@@ -48,10 +48,32 @@
   </section>
 
       <section id="bagging-section" class="content-section">
-        <form id="bagging-form">
-          <!-- Add bagging sliders or inputs here -->
-        </form>
-      </section>
+  <form id="bagging-form">
+    <div class="slider-group compact">
+      <label class="slider-label">
+        <span>Samples: <span id="bag-sample-count">50</span></span>
+        <input type="range" name="samples" min="10" max="100" value="50" id="bag-samples-slider">
+      </label>
+
+      <label class="slider-label">
+        <span>Max Depth: <span id="bag-depth-value">3</span></span>
+        <input type="range" name="max_depth" min="1" max="3" value="3" id="bag-depth-slider">
+      </label>
+
+      <label class="slider-label">
+        <span>Number of Trees: <span id="bag-tree-count">5</span></span>
+        <input type="range" name="n_trees" min="1" max="10" value="5" id="bag-tree-slider">
+      </label>
+    </div>
+    <button type="submit" onclick="BagGen(event)">Generate Bagging Model</button>
+  </form>
+
+  <label for="tree-selector">Select Tree:</label>
+<select id="tree-selector" onchange="updateBaggingPlot()"></select>
+
+<div id="bagging-tree-container" style="margin-top: 20px;"></div>
+
+</section>
 
       <section id="randomforest-section" class="content-section">
         <form id="rf-form">
@@ -97,7 +119,21 @@
       const depthSlider = document.getElementById("depth-slider");
       const depthValue = document.getElementById("depth-value");
       depthSlider.oninput = () => depthValue.textContent = depthSlider.value;
+
+      const bagSamplesSlider = document.getElementById("bag-samples-slider");
+const bagSampleCount = document.getElementById("bag-sample-count");
+bagSamplesSlider.oninput = () => bagSampleCount.textContent = bagSamplesSlider.value;
+
+const bagDepthSlider = document.getElementById("bag-depth-slider");
+const bagDepthValue = document.getElementById("bag-depth-value");
+bagDepthSlider.oninput = () => bagDepthValue.textContent = bagDepthSlider.value;
+
+const bagTreeSlider = document.getElementById("bag-tree-slider");
+const bagTreeCount = document.getElementById("bag-tree-count");
+bagTreeSlider.oninput = () => bagTreeCount.textContent = bagTreeSlider.value;
+
     </script>
+
     <script src="{{ url_for('static', filename='script1.js') }}"></script>
 
   </body>

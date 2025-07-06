@@ -98,5 +98,25 @@ def predict_sample(node, x):
 def predict(tree, X):
     return np.array([predict_sample(tree, x) for x in X])
 
+def bootstrap_sample(X,y):
+  n_samples=len(X)
+  indices=np.random.choice(n_samples,size=n_samples,replace=True)
 
+  return X[indices],y[indices]
 
+class BaggingRegressor:
+  def __init__(self,n_estimators=10,max_depth=3):
+    self.n_estimators=n_estimators
+    self.max_depth=max_depth
+    self.trees=[]
+
+  def fit(self,X,y):
+    self.trees=[]
+    for _ in range(self.n_estimators):
+      X_sample,y_sample=bootstrap_sample(X,y)
+      tree=build_tree(X_sample,y_sample,0,self.max_depth,2)
+      self.trees.append(tree)
+
+  def predict(self,X):
+    predictions=np.array([predict(tree,X) for tree in self.trees])
+    return np.mean(predictions, axis=0)

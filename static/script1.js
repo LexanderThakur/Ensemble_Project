@@ -50,32 +50,50 @@ async function RegGen(event) {
 }
 
 
-// async function RegGen(event) {
-//   event.preventDefault();
 
-//   const n_samples = document.getElementById("samples-slider").value;
-//   const max_depth = document.getElementById("depth-slider").value;
+let baggingTrees = []; // Global array to store all trees
 
-//   try {
-//     const response = await fetch(apiBase + "RegTree", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({
-//         n_samples: n_samples,
-//         max_depth: max_depth,
-//         tree_type: 1
-//       })
-//     });
+async function BagGen(event) {
+  event.preventDefault();
 
-//     const tree = await response.json();
+  const n_samples = document.getElementById("bag-samples-slider").value;
+  const max_depth = document.getElementById("bag-depth-slider").value;
+  const n_trees = document.getElementById("bag-tree-slider").value;
 
-//     Plotly.newPlot("tree-container", tree.data, tree.layout);
+  try {
+    const response = await fetch("/BagTree", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        n_samples: n_samples,
+        max_depth: max_depth,
+        n_trees: n_trees
+      })
+    });
 
-//     document.getElementById("tree-data").innerHTML = generateTable(tree.X, tree.y);
+    const result = await response.json();
+    baggingTrees = result.trees;
 
+    const selector = document.getElementById("tree-selector");
+    selector.innerHTML = "";
 
-    
-//   } catch (err) {
-//     console.log("Error fetching data:", err.message);
-//   }
-// }
+    baggingTrees.forEach((tree, i) => {
+      const option = document.createElement("option");
+      option.value = i;
+      option.text = tree.title || `Tree ${i + 1}`;
+      selector.appendChild(option);
+    });
+
+    updateBaggingPlot(); // Show first tree initially
+
+  } catch (err) {
+    console.log("Error:", err.message);
+  }
+}
+
+function updateBaggingPlot() {
+  const selectedIndex = document.getElementById("tree-selector").value;
+  const tree = baggingTrees[selectedIndex];
+
+  Plotly.newPlot("bagging-tree-container", tree.data, tree.layout);
+}
