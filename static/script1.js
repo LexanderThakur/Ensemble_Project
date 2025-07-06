@@ -51,8 +51,6 @@ async function RegGen(event) {
 
 
 
-let baggingTrees = []; // Global array to store all trees
-
 async function BagGen(event) {
   event.preventDefault();
 
@@ -72,28 +70,9 @@ async function BagGen(event) {
     });
 
     const result = await response.json();
-    baggingTrees = result.trees;
-
-    const selector = document.getElementById("tree-selector");
-    selector.innerHTML = "";
-
-    baggingTrees.forEach((tree, i) => {
-      const option = document.createElement("option");
-      option.value = i;
-      option.text = tree.title || `Tree ${i + 1}`;
-      selector.appendChild(option);
-    });
-
-    updateBaggingPlot(); // Show first tree initially
+    Plotly.newPlot("bagging-tree-container", result.data, result.layout);
 
   } catch (err) {
     console.log("Error:", err.message);
   }
-}
-
-function updateBaggingPlot() {
-  const selectedIndex = document.getElementById("tree-selector").value;
-  const tree = baggingTrees[selectedIndex];
-
-  Plotly.newPlot("bagging-tree-container", tree.data, tree.layout);
 }

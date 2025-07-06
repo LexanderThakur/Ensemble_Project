@@ -79,6 +79,60 @@ def generate_linear_data(n_samples=50,noise=0.1):
 
     return X,y
 
+def build_bagging_plotly_trees(tree_list):
+    all_nodes = []
+    all_edges = []
+    x_offset = 0
+
+    for i, tree in enumerate(tree_list):
+        nodes, edges = layout_tree(tree, x=x_offset)
+        
+        # Shift x positions so trees are side by side
+        for n in nodes:
+            n['x'] += x_offset
+        for e in edges:
+            e['from_id'] += len(all_nodes)
+            e['to_id'] += len(all_nodes)
+
+        all_nodes.extend(nodes)
+        all_edges.extend(edges)
+
+        x_offset += 5  # spacing between trees
+
+    node_trace = go.Scatter(
+        x=[n['x'] for n in all_nodes],
+        y=[n['y'] for n in all_nodes],
+        text=[n['label'] for n in all_nodes],
+        mode='markers+text',
+        textposition="top center",
+        marker=dict(size=40, color='lightgreen', line=dict(width=2, color='darkgreen')),
+        hoverinfo='text'
+    )
+
+    edge_traces = []
+    for edge in all_edges:
+        from_node = all_nodes[edge["from_id"]]
+        to_node = all_nodes[edge["to_id"]]
+        edge_traces.append(
+            go.Scatter(
+                x=[from_node["x"], to_node["x"]],
+                y=[from_node["y"], to_node["y"]],
+                mode="lines",
+                line=dict(width=2, color="gray"),
+                hoverinfo="none"
+            )
+        )
+
+    fig = go.Figure(data=[node_trace] + edge_traces)
+    fig.update_layout(
+        showlegend=False,
+        margin=dict(l=0, r=0, t=0, b=0),
+        xaxis=dict(showgrid=False, zeroline=False, visible=False),
+        yaxis=dict(showgrid=False, zeroline=False, visible=False),
+        height=600
+    )
+    return fig
+
 
 app=Flask(__name__)
 
@@ -125,14 +179,10 @@ def bag_generate():
     model = BaggingRegressor(n_estimators=n_trees, max_depth=max_depth)
     model.fit(X, y)
 
-    tree_figs = []
-    for i, tree in enumerate(model.trees):
-        fig = build_plotly_tree(tree)
-        fig_dict = json.loads(pio.to_json(fig))
-        fig_dict['title'] = f"Tree {i + 1}"
-        tree_figs.append(fig_dict)
+    fig = build_bagging_plotly_trees(model.trees)
+    fig_json = json.loads(pio.to_json(fig))
+    return jsonify(fig_json)
 
-    return jsonify({'trees': tree_figs})
 
     
     
