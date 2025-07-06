@@ -11,8 +11,13 @@ import plotly.graph_objects as go
 def layout_tree(tree, x=0, y=0, dx=1.5, dy=-100, nodes=None, edges=None, parent=None):
     if nodes is None: nodes = []
     if edges is None: edges = []
+    label = (
+    f"MSE: {tree['mse']:.2f}<br>Value: {tree['value']:.2f}" if tree["is_leaf"]
+    else f"MSE: {tree['mse']:.2f}<br>X[{tree['feature']}] ≤ {tree['threshold']:.2f}"
+)
 
-    label = f"MSE: {tree['mse']:.2f}" if tree["is_leaf"] else f"X[{tree['feature']}] ≤ {tree['threshold']:.2f}"
+
+    # label = f"MSE: {tree['mse']:.2f}" if tree["is_leaf"] else f"X[{tree['feature']}] ≤ {tree['threshold']:.2f}"
     node_id = len(nodes)
     nodes.append(dict(x=x, y=y, label=label))
 
@@ -37,7 +42,7 @@ def build_plotly_tree(tree):
         text=[n['label'] for n in nodes],
         mode='markers+text',
         textposition="top center",
-        marker=dict(size=40, color='skyblue', line=dict(width=2, color='darkblue')),
+        marker=dict(size=40, color='white', line=dict(width=1, color='Black')),
         hoverinfo='text'
     )
 
@@ -61,7 +66,7 @@ def build_plotly_tree(tree):
         margin=dict(l=0, r=0, t=0, b=0),
         xaxis=dict(showgrid=False, zeroline=False, visible=False),
         yaxis=dict(showgrid=False, zeroline=False, visible=False),
-        height=600
+        height=800
     )
 
     return fig
@@ -95,7 +100,12 @@ def generate():
     fig = build_plotly_tree(tree)
     fig_json = json.loads(pio.to_json(fig))
 
+    fig_json['X'] = X.tolist()
+    fig_json['y'] = y.tolist()
     return jsonify(fig_json)
+
+
+    
 
     
     
